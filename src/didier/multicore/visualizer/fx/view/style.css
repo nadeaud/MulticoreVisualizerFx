@@ -1,0 +1,13 @@
+.custom-button {
+    -fx-font: 16px "Serif";
+    -fx-stroke: rgb(99, 123, 71);
+}
+
+#test {
+	-fx-fill: rgb(0,250,0);
+}
+
+.node .shape { 
+    -fx-fill: rgb(30, 200, 200);
+    -fx-stroke: rgb(99, 123, 71);
+}
