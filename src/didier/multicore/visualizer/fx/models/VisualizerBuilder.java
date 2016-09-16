@@ -39,6 +39,8 @@ public class VisualizerBuilder {
 		Builder builder = new Builder();
 		String id = genID();
 		builder.attr(ZestProperties.CSS_ID__NE, id).attr(ZestProperties.LABEL__NE, id);
+		builder.attr("node-type", "VisualizerNode");
+		builder.attr("layout_resizable", true);
 		for(int i = 0; i < attrs.length; i += 2) {
 			builder.attr(attrs[i].toString(), attrs[i+1]);
 		}

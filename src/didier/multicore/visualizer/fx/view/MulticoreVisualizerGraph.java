@@ -32,17 +32,19 @@ public class MulticoreVisualizerGraph extends AbstractZestExample {
 		List<Node> nodes = new ArrayList<>();
 		nodes.addAll(Arrays.asList(
 				n(ZestProperties.LABEL__NE, "A", ZestProperties.TOOLTIP__N, "Alpha", ZestProperties.CSS_ID__NE,
-						id + "A"),
+						id + "A", "layout_resizable", true),
 				n(ZestProperties.LABEL__NE, "B", ZestProperties.TOOLTIP__N, "Beta", ZestProperties.CSS_ID__NE,
-						id + "B"),
+						id + "B", "layout_resizable", true),
 				n(ZestProperties.LABEL__NE, "C", ZestProperties.TOOLTIP__N, "Gamma", ZestProperties.CSS_ID__NE,
-						id + "C")));
+						id + "C", "layout_resizable", true)));
 		
 		
 		List<Edge> edges = new ArrayList<>();
 		
-		HashMap<String, Object> attrs = new HashMap<>();		
-		attrs.put(ZestProperties.LAYOUT_ALGORITHM__G, new GridLayoutAlgorithm());
+		HashMap<String, Object> attrs = new HashMap<>();	
+		GridLayoutAlgorithm layoutAlgo = new GridLayoutAlgorithm();
+		layoutAlgo.setResizing(true);
+		attrs.put(ZestProperties.LAYOUT_ALGORITHM__G, layoutAlgo);
 		return new Graph(attrs, nodes, edges);
 	}
 	
@@ -51,15 +53,17 @@ public class MulticoreVisualizerGraph extends AbstractZestExample {
 		List<Node> nodes = new ArrayList<>();
 		nodes.addAll(Arrays.asList(
 				n(ZestProperties.LABEL__NE, "A", ZestProperties.TOOLTIP__N, "Alpha", ZestProperties.CSS_ID__NE,
-						id + "A"),
+						id + "A", "layout_resizable", true),
 				n(ZestProperties.LABEL__NE, "B", ZestProperties.TOOLTIP__N, "Beta", ZestProperties.CSS_ID__NE,
-						id + "B")));
+						id + "B", "layout_resizable", true)));
 		
 		
 		List<Edge> edges = new ArrayList<>();
 		
-		HashMap<String, Object> attrs = new HashMap<>();		
-		attrs.put(ZestProperties.LAYOUT_ALGORITHM__G, new GridLayoutAlgorithm());
+		HashMap<String, Object> attrs = new HashMap<>();	
+		GridLayoutAlgorithm layoutAlgo = new GridLayoutAlgorithm();
+		layoutAlgo.setResizing(true);
+		attrs.put(ZestProperties.LAYOUT_ALGORITHM__G, layoutAlgo);
 		return new Graph(attrs, nodes, edges);
 	}
 	
@@ -82,10 +86,12 @@ public class MulticoreVisualizerGraph extends AbstractZestExample {
 					}
 				}
 				nodes.add(node);
-
 			}
+			
 			HashMap<String, Object> attrs = new HashMap<>();
-			attrs.put(ZestProperties.LAYOUT_ALGORITHM__G, new GridLayoutAlgorithm());
+			VisualizerGridLayoutAlgorithm layoutAlgo = new VisualizerGridLayoutAlgorithm();
+			layoutAlgo.setResizing(true);
+			attrs.put(ZestProperties.LAYOUT_ALGORITHM__G, layoutAlgo);
 			return new Graph(attrs, nodes, edges);
 		}
 		
