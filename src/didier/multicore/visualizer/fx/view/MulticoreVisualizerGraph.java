@@ -17,8 +17,11 @@ import org.eclipse.gef.zest.examples.AbstractZestExample;
 import org.eclipse.gef.zest.fx.ZestProperties;
 
 import didier.multicore.visualizer.fx.controller.MulticoreVisualizerFx;
+import didier.multicore.visualizer.fx.models.AmdFijiNanoModel;
+import didier.multicore.visualizer.fx.models.StreamingElementNode;
 import didier.multicore.visualizer.fx.models.VisualizerBuilder;
 import didier.multicore.visualizer.fx.models.VisualizerNode;
+import didier.multicore.visualizer.fx.models.AmdFijiNanoModel.GpuStreamingElement;
 
 @SuppressWarnings("restriction")
 public class MulticoreVisualizerGraph extends AbstractZestExample {
@@ -48,20 +51,22 @@ public class MulticoreVisualizerGraph extends AbstractZestExample {
 		return new Graph(attrs, nodes, edges);
 	}
 	
-	public static Graph createSecondGraph() {
-		String id = "Test";
-		List<Node> nodes = new ArrayList<>();
-		nodes.addAll(Arrays.asList(
-				n(ZestProperties.LABEL__NE, "A", ZestProperties.TOOLTIP__N, "Alpha", ZestProperties.CSS_ID__NE,
-						id + "A", "layout_resizable", true),
-				n(ZestProperties.LABEL__NE, "B", ZestProperties.TOOLTIP__N, "Beta", ZestProperties.CSS_ID__NE,
-						id + "B", "layout_resizable", true)));
+	public static Graph createGPUVisualizerGraph() {
 		
+		AmdFijiNanoModel model = new AmdFijiNanoModel();
 		
+		List<StreamingElementNode> nodes = new ArrayList<>();
 		List<Edge> edges = new ArrayList<>();
 		
-		HashMap<String, Object> attrs = new HashMap<>();	
-		GridLayoutAlgorithm layoutAlgo = new GridLayoutAlgorithm();
+		for(GpuStreamingElement element : model.getStreamingEngines()) {
+			StreamingElementNode node = VisualizerBuilder.buildSENode();
+			node.setElement(element);
+			nodes.add(node);
+		}
+		
+		
+		HashMap<String, Object> attrs = new HashMap<>();
+		VisualizerGridLayoutAlgorithm layoutAlgo = new VisualizerGridLayoutAlgorithm();
 		layoutAlgo.setResizing(true);
 		attrs.put(ZestProperties.LAYOUT_ALGORITHM__G, layoutAlgo);
 		return new Graph(attrs, nodes, edges);
@@ -79,7 +84,8 @@ public class MulticoreVisualizerGraph extends AbstractZestExample {
 			List<VisualizerNode> nodes = new ArrayList<>();
 			for(VisualizerCore core : cores) {
 				//nodes.add(n(ZestProperties.LABEL__NE, Integer.toString(core.m_id), ZestProperties.CSS_ID__NE, "test"));
-				VisualizerNode node = VisualizerBuilder.buildNode(ZestProperties.LABEL__NE, Integer.toString(core.m_id), "VisualizerController", controller);
+				VisualizerNode node = VisualizerBuilder.buildNode(ZestProperties.LABEL__NE, Integer.toString(core.m_id), 
+						"VisualizerController", controller);
 				for(VisualizerThread thread : model.getThreads()) {
 					if(thread.getCore() == core) {
 						node.addThread(thread);

@@ -45,10 +45,8 @@ public class VisualizerFxThread extends Circle {
 					ISelection selection = SelectionUtils.toSelection(selectedObjects);
 					m_controller.selectionChanged(selection);
 				}
-			}
-			
+			}	
 		}
-		
 	}
 	
 	public VisualizerFxThread(VisualizerThread thread, MulticoreVisualizerFx controller, double centerX, double centerY, double radius, Paint fill) {

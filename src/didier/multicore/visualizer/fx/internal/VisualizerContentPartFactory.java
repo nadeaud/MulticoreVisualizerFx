@@ -9,6 +9,7 @@ import org.eclipse.gef.zest.fx.parts.ZestFxContentPartFactory;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
+import didier.multicore.visualizer.fx.models.StreamingElementNode;
 import javafx.scene.Node;
 
 public class VisualizerContentPartFactory extends ZestFxContentPartFactory {
@@ -21,6 +22,13 @@ public class VisualizerContentPartFactory extends ZestFxContentPartFactory {
 			Object content, IBehavior<Node> contextBehavior,
 			Map<Object, Object> contextMap) {
 		
+		if(content instanceof StreamingElementNode) {
+			GPUVisualizerContentPart part = new GPUVisualizerContentPart(content);
+			if(part != null) {
+				injector.injectMembers(part);
+			}
+			return part;
+		}
 		if(content instanceof org.eclipse.gef.graph.Node) {
 			VisualizerContentPart part = new VisualizerContentPart(content);
 			if(part != null) {

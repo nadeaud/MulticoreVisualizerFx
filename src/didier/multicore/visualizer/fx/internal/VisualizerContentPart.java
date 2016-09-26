@@ -80,7 +80,6 @@ public class VisualizerContentPart extends NodePart {
 		canvas = new CustomPane();
 		canvas.setStyle("-fx-background-color : green;");
 		canvas.setPrefSize(100, 100);
-		canvas.isResizable();
 		canvas.setMouseTransparent(false);
 		
 		m_vbox = new VBox();

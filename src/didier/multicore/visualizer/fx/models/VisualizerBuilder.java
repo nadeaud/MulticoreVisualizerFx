@@ -28,6 +28,10 @@ public class VisualizerBuilder {
 			return new VisualizerNode(attrs);
 		}
 		
+		public StreamingElementNode buildStreamingElementNode() {
+			return new StreamingElementNode();
+		}
+		
 	}
 	
 	private static String genID() {
@@ -45,9 +49,19 @@ public class VisualizerBuilder {
 			builder.attr(attrs[i].toString(), attrs[i+1]);
 		}
 		return builder.buildVisualizerNode();		
+	}
+	
+	public static StreamingElementNode buildSENode(Object... attrs) {
 		
-		
-		
+		Builder builder = new Builder();
+		String id = genID();
+		builder.attr(ZestProperties.CSS_ID__NE, id).attr(ZestProperties.LABEL__NE, id);
+		builder.attr("node-type", "StreamingElementNode");
+		builder.attr("layout_resizable", true);
+		for(int i = 0; i < attrs.length; i += 2) {
+			builder.attr(attrs[i].toString(), attrs[i+1]);
+		}
+		return builder.buildStreamingElementNode();		
 	}
 
 }

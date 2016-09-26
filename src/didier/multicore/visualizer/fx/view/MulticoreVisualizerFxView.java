@@ -16,14 +16,21 @@ import didier.multicore.visualizer.fx.internal.MulticoreVisualizerFxUIModule;
 import javafx.embed.swt.FXCanvas;
 
 public class MulticoreVisualizerFxView extends ZestFxUiView {
+	
+	private boolean gpu_visualizer = false;
 
 	private MulticoreVisualizerFx multicoreVisualizer;
 	
 	public MulticoreVisualizerFxView() {
 		//super();
 		super(Guice.createInjector(Modules.override(new MulticoreVisualizerFxUIModule()).with((Module) new ZestFxUiModule())));
-		setGraph(MulticoreVisualizerGraph.createDefaultGraph());
-		multicoreVisualizer = new MulticoreVisualizerFx(this);
+		
+		if(!gpu_visualizer) {
+			setGraph(MulticoreVisualizerGraph.createDefaultGraph());
+		}else {
+			setGraph(MulticoreVisualizerGraph.createGPUVisualizerGraph());
+		}
+		multicoreVisualizer = new MulticoreVisualizerFx(this, gpu_visualizer);
 	}
 
 	@SuppressWarnings("restriction")
@@ -38,6 +45,12 @@ public class MulticoreVisualizerFxView extends ZestFxUiView {
 				setGraph(graph);
 			}
 		});
+	}
+	
+	@Override
+	public void dispose() {
+		multicoreVisualizer = null;
+		super.dispose();
 	}
 
 }

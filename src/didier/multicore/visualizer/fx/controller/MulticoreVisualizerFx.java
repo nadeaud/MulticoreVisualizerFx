@@ -72,10 +72,12 @@ public class MulticoreVisualizerFx {
 	// geometry each time we want to update the load information.
 	protected List<IDMContext> m_cpuCoreContextsCache = null;
 
-	public MulticoreVisualizerFx(MulticoreVisualizerFxView view) {
+	public MulticoreVisualizerFx(MulticoreVisualizerFxView view, boolean gpuVisualizer) {
 		m_view = view;
 		
-		initializeMulticoreVisualizer();		
+		if(!gpuVisualizer) {
+			initializeMulticoreVisualizer();
+		}
 	}
 	
 	// If there is a debug session started and the Visualizer has been initialized
