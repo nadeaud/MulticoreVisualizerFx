@@ -26,6 +26,11 @@ import didier.multicore.visualizer.fx.models.AmdFijiNanoModel.GpuStreamingElemen
 @SuppressWarnings("restriction")
 public class MulticoreVisualizerGraph extends AbstractZestExample {
 
+	public static class GpuGraph {
+		public AmdFijiNanoModel fGpuModel;
+		public Graph fGraph;
+	}
+	
 	public MulticoreVisualizerGraph(String title) {
 		super("Zest Test Graph");
 	}
@@ -51,25 +56,27 @@ public class MulticoreVisualizerGraph extends AbstractZestExample {
 		return new Graph(attrs, nodes, edges);
 	}
 	
-	public static Graph createGPUVisualizerGraph() {
+	public static GpuGraph createGPUVisualizerGraph() {
 		
-		AmdFijiNanoModel model = new AmdFijiNanoModel();
-		
+		AmdFijiNanoModel gpuMode = new AmdFijiNanoModel();		
 		List<StreamingElementNode> nodes = new ArrayList<>();
 		List<Edge> edges = new ArrayList<>();
 		
-		for(GpuStreamingElement element : model.getStreamingEngines()) {
+		for(GpuStreamingElement element : gpuMode.getStreamingEngines()) {
 			StreamingElementNode node = VisualizerBuilder.buildSENode();
 			node.setElement(element);
 			nodes.add(node);
-		}
-		
+		}		
 		
 		HashMap<String, Object> attrs = new HashMap<>();
 		VisualizerGridLayoutAlgorithm layoutAlgo = new VisualizerGridLayoutAlgorithm();
 		layoutAlgo.setResizing(true);
 		attrs.put(ZestProperties.LAYOUT_ALGORITHM__G, layoutAlgo);
-		return new Graph(attrs, nodes, edges);
+		
+		GpuGraph graph = new GpuGraph();
+		graph.fGraph = new Graph(attrs, nodes, edges);
+		graph.fGpuModel = gpuMode;
+		return graph;
 	}
 	
 	public static Graph createVisualizerGraph(VisualizerModel model, MulticoreVisualizerFx controller) {

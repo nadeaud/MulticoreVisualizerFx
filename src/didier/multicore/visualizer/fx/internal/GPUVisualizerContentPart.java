@@ -23,6 +23,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -129,9 +130,6 @@ public class GPUVisualizerContentPart extends NodePart{
 		if(m_node != null) {
 			GpuStreamingElement element = m_node.getElement();
 			for(GpuComputeUnit cu : element.get_cus()) {
-
-//				HBox hbox = new HBox(3.0);
-//				hbox.setAlignment(Pos.CENTER);
 				
 				for(GpuSIMD simd : cu.get_simds()) {
 					
@@ -139,10 +137,9 @@ public class GPUVisualizerContentPart extends NodePart{
 						ColumnConstraints cc = new ColumnConstraints();
 						cc.setPercentWidth(100.0/(double)cu.get_simds().size());
 						cc.setFillWidth(true);
-						//cc.setHgrow(Priority.ALWAYS);
 						m_gridPane.getColumnConstraints().add(cc);
 					}
-					
+					StackPane sPane = new StackPane();
 					Rectangle rect = new ResizableRectangle(50.0,50.0);
 					rect.setStyle("-fx-fill: #91cf60;");
 					rect.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -156,8 +153,12 @@ public class GPUVisualizerContentPart extends NodePart{
 							}
 						}
 					});
-					
-					m_gridPane.add(rect, j, i);
+					HBox hbox = new HBox(2);
+					simd.setHBox(hbox);
+					simd.setRectangle(rect);
+					sPane.getChildren().add(rect);
+					sPane.getChildren().add(hbox);
+					m_gridPane.add(sPane, j, i);
 					j++;
 					//rect.widthProperty().bind(canvas.widthProperty().subtract(50.0).divide(cu.get_simds().size()));
 					//rect.heightProperty().bind(canvas.heightProperty().

@@ -15,6 +15,7 @@ import org.eclipse.cdt.dsf.datamodel.DMContexts;
 import org.eclipse.cdt.dsf.datamodel.IDMContext;
 import org.eclipse.cdt.dsf.debug.service.IProcesses.IThreadDMData;
 import org.eclipse.cdt.dsf.debug.service.IStack.IFrameDMData;
+import org.eclipse.cdt.dsf.gdb.internal.ui.viewmodel.launch.ThreadVMNode;
 import org.eclipse.cdt.dsf.gdb.launching.GDBProcess;
 import org.eclipse.cdt.dsf.gdb.launching.GdbLaunch;
 import org.eclipse.cdt.dsf.gdb.multicorevisualizer.internal.ui.MulticoreVisualizerUIPlugin;
@@ -32,6 +33,8 @@ import org.eclipse.cdt.dsf.gdb.service.IGDBHardwareAndOS.ICPUDMContext;
 import org.eclipse.cdt.dsf.gdb.service.IGDBHardwareAndOS.ICoreDMContext;
 import org.eclipse.cdt.dsf.mi.service.IMIExecutionDMContext;
 import org.eclipse.cdt.dsf.mi.service.IMIProcessDMContext;
+import org.eclipse.cdt.dsf.service.DsfSession;
+import org.eclipse.cdt.dsf.ui.viewmodel.datamodel.AbstractDMVMNode;
 import org.eclipse.cdt.dsf.ui.viewmodel.datamodel.IDMVMContext;
 import org.eclipse.cdt.visualizer.ui.util.SelectionManager;
 import org.eclipse.core.runtime.IAdaptable;
@@ -41,6 +44,8 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.viewers.ISelection;
 
+import didier.multicore.visualizer.fx.internal.utils.HsailDsfService;
+import didier.multicore.visualizer.fx.utils.model.HsailWaveModel;
 import didier.multicore.visualizer.fx.view.MulticoreVisualizerFxView;
 
 
@@ -57,8 +62,6 @@ public class MulticoreVisualizerFx {
 	/** DSF debug context session object. */
 	protected DSFSessionState m_sessionState;
 	
-	private SelectionManager m_selectionManager;
-
 	/** View linked with this MulticoreVisualizer */
 	private MulticoreVisualizerFxView m_view;
 	
@@ -75,9 +78,26 @@ public class MulticoreVisualizerFx {
 	public MulticoreVisualizerFx(MulticoreVisualizerFxView view, boolean gpuVisualizer) {
 		m_view = view;
 		
-		if(!gpuVisualizer) {
-			initializeMulticoreVisualizer();
+		initializeMulticoreVisualizer();
+		
+		if(!gpuVisualizer && m_sessionState != null) {
+			getVisualizerModel(m_model);
+			m_initialized = true;
+		} else if (m_sessionState != null) {
+			m_sessionState.execute(new DsfRunnable() {
+				@Override
+				public void run() {
+					getRunningWaves();
+					
+				}
+			});
 		}
+	}
+	
+	public void dispose() {
+		m_sessionState.dispose();
+		m_view = null;
+		m_model.dispose();		
 	}
 	
 	// If there is a debug session started and the Visualizer has been initialized
@@ -96,8 +116,6 @@ public class MulticoreVisualizerFx {
 		m_model = new VisualizerModel(m_sessionState.getSessionID());
 		m_cpuCoreContextsCache = new ArrayList<IDMContext>();
 		
-		getVisualizerModel(m_model);
-		m_initialized = true;
 	}
 
 	public void updateCanvas(final VisualizerModel model) {
@@ -110,6 +128,7 @@ public class MulticoreVisualizerFx {
 	 * Starts visualizer model request.
 	 */
 	protected void getVisualizerModel(final VisualizerModel model) {
+		
 		m_sessionState.execute(new DsfRunnable() { @Override public void run() {
 			// get model asynchronously starting at the top of the hierarchy
 			getCPUs(model, new ImmediateRequestMonitor() {
@@ -153,7 +172,6 @@ public class MulticoreVisualizerFx {
 				sessionId = ((GdbLaunch)launch).getSession().getId();
 			}
 		}
-
 		return setDebugSession(sessionId);
 	}
 
@@ -162,6 +180,7 @@ public class MulticoreVisualizerFx {
 	 */
 	public boolean setDebugSession(String sessionId) {
 		boolean changed = false;
+
 
 		if (m_sessionState != null &&
 				! m_sessionState.getSessionID().equals(sessionId))
@@ -179,8 +198,25 @@ public class MulticoreVisualizerFx {
 			// start timer that updates the load meters
 			changed = true;
 		}
-
 		return changed;
+	}
+	
+	@ConfinedToDsfExecutor("getSession().getExecutor()")
+	protected void getRunningWaves() {
+		fTargetData.getWaves(m_sessionState,
+				new ImmediateDataRequestMonitor<List<HsailWaveModel>>()
+				{
+					@Override
+					protected void handleCompleted() {
+						
+						List<HsailWaveModel> list = getData();
+						if(list == null || list.size() == 0)
+							return;
+						
+						m_view.resetCanvas(getData());
+						
+					}
+				});
 	}
 
 	@ConfinedToDsfExecutor("getSession().getExecutor()")
