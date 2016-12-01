@@ -20,15 +20,13 @@ Require-Bundle: javax.inject,
  org.eclipse.gef.mvc.fx.ui;bundle-version="5.0.0",
  org.eclipse.gef.zest.fx.ui;bundle-version="5.0.0",
  org.eclipse.gef.common,
- com.google.inject,
- org.eclipse.fx.javafx,
  org.eclipse.gef.zest.examples,
  org.eclipse.cdt.visualizer.ui,
  org.eclipse.gef.fx,
- org.eclipse.gef;bundle-version="3.11.0",
- didier.multicore.visualizer.fx.utils
+ didier.multicore.visualizer.fx.utils,
+ com.google.inject;bundle-version="3.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: javax.annotation;version="1.2.0",
  org.eclipse.cdt.dsf.ui.viewmodel.datamodel,
  org.eclipse.ui.plugin
-Export-Package: didier.multicore.visualizer.fx.internal.utils
+

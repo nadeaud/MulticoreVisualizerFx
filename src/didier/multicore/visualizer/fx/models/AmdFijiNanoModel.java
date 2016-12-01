@@ -25,7 +25,7 @@ public class AmdFijiNanoModel {
 			return id < m_cus.size() ? m_cus.get(id) : null;
 		}
 
-		public ArrayList<GpuComputeUnit> get_cus() {
+		public ArrayList<GpuComputeUnit> getComputeUnits() {
 			return m_cus;
 		}
 
@@ -56,7 +56,7 @@ public class AmdFijiNanoModel {
 			return id < m_simds.size() ? m_simds.get(id) : null;
 		}
 
-		public ArrayList<GpuSIMD> get_simds() {
+		public ArrayList<GpuSIMD> getSIMDs() {
 			return m_simds;
 		}
 

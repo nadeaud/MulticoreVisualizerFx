@@ -4,10 +4,11 @@ import org.eclipse.gef.common.adapt.AdapterKey;
 import org.eclipse.gef.common.adapt.inject.AdaptableScopes;
 import org.eclipse.gef.common.adapt.inject.AdapterInjectionSupport;
 import org.eclipse.gef.common.adapt.inject.AdapterInjectionSupport.LoggingMode;
-import org.eclipse.gef.mvc.fx.domain.FXDomain;
-import org.eclipse.gef.mvc.fx.viewer.FXViewer;
-import org.eclipse.gef.mvc.parts.IContentPartFactory;
+import org.eclipse.gef.mvc.fx.domain.IDomain;
+import org.eclipse.gef.mvc.fx.viewer.IViewer;
+import org.eclipse.gef.mvc.fx.parts.IContentPartFactory;
 import org.eclipse.gef.zest.fx.ZestFxModule;
+import org.eclipse.gef.zest.fx.parts.ZestFxContentPartFactory;
 import org.eclipse.gef.zest.fx.parts.ZestFxRootPart;
 
 import com.google.inject.TypeLiteral;
@@ -33,9 +34,9 @@ public class MulticoreVisualizerFxUIModule extends ZestFxModule {
 	}
 	
 	@Override
-	protected void bindFXRootPartAsContentViewerAdapter(MapBinder<AdapterKey<?>, Object> adapterMapBinder) {
-		adapterMapBinder.addBinding(AdapterKey.role(FXDomain.CONTENT_VIEWER_ROLE)).to(MulticoreVisualizerZestFxRootPart.class)
-				.in(AdaptableScopes.typed(FXViewer.class));
+	protected void bindRootPartAsContentViewerAdapter(MapBinder<AdapterKey<?>, Object> adapterMapBinder) {
+		adapterMapBinder.addBinding(AdapterKey.role(IDomain.CONTENT_VIEWER_ROLE)).to(MulticoreVisualizerZestFxRootPart.class)
+				.in(AdaptableScopes.typed(IViewer.class));
 	}
 	
 	@Override
@@ -44,7 +45,10 @@ public class MulticoreVisualizerFxUIModule extends ZestFxModule {
 		 * is called twice. Seems to work in example 
 		 * https://github.com/eclipse/gef/blob/master/org.eclipse.gef.zest.examples/src/org/eclipse/gef/zest/examples/CustomNodeExample.java
 		 */
-		binder().bind(new TypeLiteral<IContentPartFactory<Node>>() {
-			}).toInstance(new VisualizerContentPartFactory());
+		//binder().bind(new TypeLiteral<IContentPartFactory<Node>>() {
+		//	}).toInstance(new VisualizerContentPartFactory());
+		binder().bind(IContentPartFactory.class).to(VisualizerContentPartFactory.class)
+			.in(AdaptableScopes.typed(IViewer.class));
+		//.to(ZestFxContentPartFactory.class).in(AdaptableScopes.typed(IViewer.class));
 	}
 }

@@ -93,7 +93,7 @@ public class GPUVisualizerContentPart extends NodePart{
 	}
 	
 	@Override 
-	protected Group createVisual() {
+	protected Group doCreateVisual() {
 		System.out.print(com.sun.javafx.runtime.VersionInfo.getRuntimeVersion());
 		final Group group = new Group() {
 			@Override
@@ -129,13 +129,13 @@ public class GPUVisualizerContentPart extends NodePart{
 		int i=0,j=0;
 		if(m_node != null) {
 			GpuStreamingElement element = m_node.getElement();
-			for(GpuComputeUnit cu : element.get_cus()) {
+			for(GpuComputeUnit cu : element.getComputeUnits()) {
 				
-				for(GpuSIMD simd : cu.get_simds()) {
+				for(GpuSIMD simd : cu.getSIMDs()) {
 					
 					if(i == 0) {
 						ColumnConstraints cc = new ColumnConstraints();
-						cc.setPercentWidth(100.0/(double)cu.get_simds().size());
+						cc.setPercentWidth(100.0/(double)cu.getSIMDs().size());
 						cc.setFillWidth(true);
 						m_gridPane.getColumnConstraints().add(cc);
 					}
@@ -175,7 +175,7 @@ public class GPUVisualizerContentPart extends NodePart{
 				i++;
 				
 				RowConstraints rc = new RowConstraints();
-				double percent = 100.0/(double)element.get_cus().size();
+				double percent = 100.0/(double)element.getComputeUnits().size();
 				rc.setPercentHeight(percent);
 				rc.setFillHeight(true);
 				//rc.setVgrow(Priority.ALWAYS);

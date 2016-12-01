@@ -60,7 +60,7 @@ public class VisualizerContentPart extends NodePart {
 	}
 	
 	@Override
-	protected Group createVisual() {
+	protected Group doCreateVisual() {
 		// container set-up
 		final Group group = new Group() {
 			

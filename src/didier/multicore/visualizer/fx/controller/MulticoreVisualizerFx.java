@@ -44,7 +44,8 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.viewers.ISelection;
 
-import didier.multicore.visualizer.fx.internal.utils.HsailDsfService;
+import didier.multicore.visualizer.fx.models.MulticoreVisualizerEventListener;
+//import didier.multicore.visualizer.fx.internal.utils.HsailDsfService;
 import didier.multicore.visualizer.fx.utils.model.HsailWaveModel;
 import didier.multicore.visualizer.fx.view.MulticoreVisualizerFxView;
 
@@ -58,16 +59,13 @@ public class MulticoreVisualizerFx {
 	 * Proxy to the target data needed to build the model
 	 */
 	private IDSFTargetDataProxy fTargetData;
-
 	/** DSF debug context session object. */
-	protected DSFSessionState m_sessionState;
-	
+	protected DSFSessionState fSessionState;
 	/** View linked with this MulticoreVisualizer */
-	private MulticoreVisualizerFxView m_view;
-	
-	private VisualizerModel m_model;
-	
-	private Boolean m_initialized = false;
+	private MulticoreVisualizerFxView fView;
+	private VisualizerModel fModel;
+	private Boolean fInitialized = false;
+	private MulticoreVisualizerEventListener fListener;
 
 	// This is used to cache the CPU and core
 	// contexts, each time the model is recreated.  This way
@@ -76,50 +74,101 @@ public class MulticoreVisualizerFx {
 	protected List<IDMContext> m_cpuCoreContextsCache = null;
 
 	public MulticoreVisualizerFx(MulticoreVisualizerFxView view, boolean gpuVisualizer) {
-		m_view = view;
+		fView = view;
+		fListener = new MulticoreVisualizerEventListener(this);
 		
 		initializeMulticoreVisualizer();
 		
-		if(!gpuVisualizer && m_sessionState != null) {
-			getVisualizerModel(m_model);
-			m_initialized = true;
-		} else if (m_sessionState != null) {
-			m_sessionState.execute(new DsfRunnable() {
+		if(!gpuVisualizer && fSessionState != null) {
+			getVisualizerModel(fModel);
+			fInitialized = true;
+		} else if (fSessionState != null) {
+			fSessionState.execute(new DsfRunnable() {
 				@Override
 				public void run() {
-					getRunningWaves();
+					updateRunningWaves();
 					
+				}
+			});
+		}
+		
+		registerListener();
+	}
+	
+	public void dispose() {
+		removeListener();
+		fSessionState.dispose();
+		fView = null;
+		fModel.dispose();
+	}
+	
+	public void registerListener () {
+		DsfSession session = DsfSession.getSession(fSessionState.getSessionID());
+		
+		if (session != null)
+		{
+			session.getExecutor().execute(new DsfRunnable() {
+				@Override
+				public void run() {
+					session.addServiceEventListener(fListener, null);
 				}
 			});
 		}
 	}
 	
-	public void dispose() {
-		m_sessionState.dispose();
-		m_view = null;
-		m_model.dispose();		
+	public void removeListener () {
+		DsfSession session = DsfSession.getSession(fSessionState.getSessionID());
+		
+		if (session != null)
+		{
+			session.getExecutor().execute(new DsfRunnable() {
+				@Override
+				public void run () {
+					if (fListener != null) {
+						session.removeServiceEventListener(fListener);
+					}
+				}
+			});
+		}
 	}
 	
+	
 	// If there is a debug session started and the Visualizer has been initialized
-	private Boolean isInitialized() {
-		return m_initialized;
-	}
+	//private Boolean isInitialized() {
+	//	return m_initialized;
+	//}
 	
 	public void initializeMulticoreVisualizer() {
 		updateDebugContext();
 		
 		// If there is no valid session, don't proceed any further
-		if(m_sessionState == null)
+		if(fSessionState == null)
 			return;
 		
 		fTargetData = new DSFDebugModel();
-		m_model = new VisualizerModel(m_sessionState.getSessionID());
+		fModel = new VisualizerModel(fSessionState.getSessionID());
 		m_cpuCoreContextsCache = new ArrayList<IDMContext>();
 		
 	}
+	
+	public void triggerUpdateCanvas () {
+		if (fSessionState == null) {
+			// If the sessionState is null, try to get it and proceed
+			updateDebugContext();
+			if (fSessionState == null)
+				return;
+		}
+		
+		fSessionState.execute(new DsfRunnable() {
+			@Override
+			public void run() {
+				updateRunningWaves();
+			}
+		});
+	}
 
-	public void updateCanvas(final VisualizerModel model) {
-		m_view.resetCanvas(model);
+	protected void updateCanvas(final VisualizerModel model) {
+		fView.resetCanvas(model);
 	}
 
 	// --- Visualizer model update methods ---
@@ -129,7 +178,7 @@ public class MulticoreVisualizerFx {
 	 */
 	protected void getVisualizerModel(final VisualizerModel model) {
 		
-		m_sessionState.execute(new DsfRunnable() { @Override public void run() {
+		fSessionState.execute(new DsfRunnable() { @Override public void run() {
 			// get model asynchronously starting at the top of the hierarchy
 			getCPUs(model, new ImmediateRequestMonitor() {
 				@Override
@@ -182,18 +231,18 @@ public class MulticoreVisualizerFx {
 		boolean changed = false;
 
 
-		if (m_sessionState != null &&
-				! m_sessionState.getSessionID().equals(sessionId))
+		if (fSessionState != null &&
+				! fSessionState.getSessionID().equals(sessionId))
 		{			
-			m_sessionState.dispose();
-			m_sessionState = null;
+			fSessionState.dispose();
+			fSessionState = null;
 			changed = true;
 		}
 
-		if (m_sessionState == null &&
+		if (fSessionState == null &&
 				sessionId != null)
 		{
-			m_sessionState = new DSFSessionState(sessionId);
+			fSessionState = new DSFSessionState(sessionId);
 			//m_sessionState.addServiceEventListener(fEventListener);
 			// start timer that updates the load meters
 			changed = true;
@@ -202,26 +251,27 @@ public class MulticoreVisualizerFx {
 	}
 	
 	@ConfinedToDsfExecutor("getSession().getExecutor()")
-	protected void getRunningWaves() {
-		fTargetData.getWaves(m_sessionState,
-				new ImmediateDataRequestMonitor<List<HsailWaveModel>>()
+	protected void updateRunningWaves() {
+		fTargetData.getWaves(fSessionState,
+				new ImmediateDataRequestMonitor<IDMContext[]>()
 				{
 					@Override
 					protected void handleCompleted() {
-						
-						List<HsailWaveModel> list = getData();
-						if(list == null || list.size() == 0)
+						if (!isSuccess()) {
+							fView.resetCanvas(new IDMContext[0]);
 							return;
-						
-						m_view.resetCanvas(getData());
+						}				
+						fView.resetCanvas(getData());
 						
 					}
 				});
 	}
 
+	/* Methods copied from the original MulticoreVisualizer for the CPU visualizer. */
+	
 	@ConfinedToDsfExecutor("getSession().getExecutor()")
 	protected void getCPUs(final VisualizerModel model, final RequestMonitor rm) {
-		fTargetData.getCPUs(m_sessionState, new ImmediateDataRequestMonitor<ICPUDMContext[]>() {
+		fTargetData.getCPUs(fSessionState, new ImmediateDataRequestMonitor<ICPUDMContext[]>() {
 			@Override
 			protected void handleCompleted() {
 				ICPUDMContext[] cpuContexts = isSuccess() ? getData() : null;
@@ -240,7 +290,7 @@ public class MulticoreVisualizerFx {
 			model.addCPU(new VisualizerCPU(0));
 
 			// Collect core data.
-			fTargetData.getCores(m_sessionState, new ImmediateDataRequestMonitor<ICoreDMContext[]>() {
+			fTargetData.getCores(fSessionState, new ImmediateDataRequestMonitor<ICoreDMContext[]>() {
 				@Override
 				protected void handleCompleted() {
 					// Get Cores
@@ -270,7 +320,7 @@ public class MulticoreVisualizerFx {
 				model.addCPU(new VisualizerCPU(cpuID));
 
 				// Collect core data.
-				fTargetData.getCores(m_sessionState, cpuContext, new ImmediateDataRequestMonitor<ICoreDMContext[]>() {
+				fTargetData.getCores(fSessionState, cpuContext, new ImmediateDataRequestMonitor<ICoreDMContext[]>() {
 					@Override
 					protected void handleCompleted() {
 						ICoreDMContext[] coreContexts = isSuccess() ? getData() : null;
@@ -306,7 +356,7 @@ public class MulticoreVisualizerFx {
 				cpu.addCore(new VisualizerCore(cpu, coreID));
 				
 				// Collect thread data
-				fTargetData.getThreads(m_sessionState, cpuContext, coreContext, new ImmediateDataRequestMonitor<IDMContext[]>() {
+				fTargetData.getThreads(fSessionState, cpuContext, coreContext, new ImmediateDataRequestMonitor<IDMContext[]>() {
 					@Override
 					protected void handleCompleted() {
 						IDMContext[] threadContexts = isSuccess() ? getData() : null;
@@ -337,7 +387,7 @@ public class MulticoreVisualizerFx {
 					DMContexts.getAncestorOfType(threadContext, IMIExecutionDMContext.class);
 				// Don't add the thread to the model just yet, let's wait until we have its data and execution state.
 				// Collect thread data
-				fTargetData.getThreadData(m_sessionState, cpuContext, coreContext, execContext, new ImmediateDataRequestMonitor<IThreadDMData>() {
+				fTargetData.getThreadData(fSessionState, cpuContext, coreContext, execContext, new ImmediateDataRequestMonitor<IThreadDMData>() {
 					@Override
 					protected void handleCompleted() {
 						IThreadDMData threadData = isSuccess() ? getData() : null;
@@ -358,14 +408,14 @@ public class MulticoreVisualizerFx {
 			                               final RequestMonitor rm)
 	{
 		// Get the execution state
-		fTargetData.getThreadExecutionState(m_sessionState, cpuContext, coreContext, execContext, 
+		fTargetData.getThreadExecutionState(fSessionState, cpuContext, coreContext, execContext, 
 				threadData, new ImmediateDataRequestMonitor<VisualizerExecutionState>() {
 			@Override
 			protected void handleCompleted() {
 				final VisualizerExecutionState state = isSuccess() ? getData() : null;
 				if (state != null && !(state.equals(VisualizerExecutionState.RUNNING)) ) {
 					// Get the frame data
-					fTargetData.getTopFrameData(m_sessionState, execContext, new ImmediateDataRequestMonitor<IFrameDMData>() {
+					fTargetData.getTopFrameData(fSessionState, execContext, new ImmediateDataRequestMonitor<IFrameDMData>() {
 						@Override
 						protected void handleCompleted() {
 							IFrameDMData frameData = isSuccess() ? getData() : null;

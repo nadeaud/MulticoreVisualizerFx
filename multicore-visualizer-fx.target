@@ -1,27 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="cdt" sequenceNumber="13">
+<?pde version="3.8"?><target name="cdt" sequenceNumber="18">
 <locations>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.xtext.sdk.feature.group" version="2.10.0.v201605250459"/>
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.12.0.v20160526-0356"/>
 <unit id="org.eclipse.sdk.ide" version="4.6.0.I20160606-1100"/>
 <repository location="http://download.eclipse.org/releases/neon"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.gef.common.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.gef.geometry.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.gef.fx.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.gef.mvc.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.gef.mvc.examples.source.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.gef.layout.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.gef.graph.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.gef.zest.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.gef.zest.examples.source.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.gef.dot.sdk.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.gef.cloudio.sdk.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/tools/gef/updates/integration"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.apache.commons.compress" version="0.0.0"/>
 <unit id="org.apache.log4j" version="0.0.0"/>
 <unit id="org.apache.log4j.source" version="0.0.0"/>
@@ -35,62 +21,88 @@
 <unit id="com.google.gson" version="0.0.0"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.freemarker" version="0.0.0"/>
 <unit id="org.antlr.runtime" version="0.0.0"/>
 <repository location="https://hudson.eclipse.org/orbit/job/orbit-recipes/lastSuccessfulBuild/artifact/releng/repository/target/repository/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.swtbot.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/swtbot/snapshots/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <repository location="http://download.eclipse.org/tm/updates/4.0/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.remote.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.remote.serial.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.remote.console.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/tools/ptp/builds/remote/neon/milestones"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.license.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/cbi/updates/license/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.test.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
 <unit id="org.eclipse.equinox.executable.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.6milestones/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.launchbar.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.launchbar.remote.feature.group" version="0.0.0"/>
 <repository location="https://hudson.eclipse.org/cdt/job/launchbar-master/lastSuccessfulBuild/artifact/repo/target/repository/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.cdt.native.feature.group" version="0.0.0"/>
 <repository location="https://hudson.eclipse.org/cdt/job/cdt-master/lastSuccessfulBuild/artifact/releng/org.eclipse.cdt.repo/target/repository/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.linuxtools.docker.feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/linuxtools/updates-docker-nightly/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.tm.terminal.control" version="0.0.0"/>
 <repository location="http://download.eclipse.org/tm/terminal/builds/development/nightly/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/releases/neon/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.tools.templates.core" version="0.0.0"/>
 <unit id="org.eclipse.tools.templates.freemarker" version="0.0.0"/>
 <unit id="org.eclipse.tools.templates.ui" version="0.0.0"/>
 <repository location="https://hudson.eclipse.org/cdt/job/tools-templates-master/lastSuccessfulBuild/artifact/repo/target/repository/"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.gef.mvc.fx" version="5.0.0.201611260302"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.gef.fx.feature.group" version="5.0.0.201611260302"/>
+<unit id="org.eclipse.gef.geometry.sdk.feature.group" version="5.0.0.201611260302"/>
+<unit id="com.google.inject.assistedinject" version="3.0.0.v201402270930"/>
+<unit id="org.eclipse.gef.mvc.sdk.feature.group" version="5.0.0.201611260302"/>
+<unit id="org.eclipse.gef.zest.sdk.feature.group" version="5.0.0.201611260302"/>
+<unit id="org.eclipse.gef.mvc.ui.feature.group" version="5.0.0.201610141103"/>
+<unit id="com.google.guava" version="15.0.0.v201403281430"/>
+<unit id="org.eclipse.gef.cloudio.sdk.feature.group" version="5.0.0.201611260302"/>
+<unit id="org.eclipse.gef.layout.sdk.feature.group" version="5.0.0.201611260302"/>
+<unit id="com.google.inject" version="3.0.0.v201605172100"/>
+<unit id="org.eclipse.gef.zest.examples.source.feature.group" version="5.0.0.201611260302"/>
+<unit id="org.eclipse.gef.mvc.fx.ui.feature.group" version="5.0.0.201611260302"/>
+<unit id="org.eclipse.gef.mvc.feature.group" version="5.0.0.201610141103"/>
+<unit id="org.eclipse.gef.fx.sdk.feature.group" version="5.0.0.201611260302"/>
+<unit id="org.eclipse.gef.common.sdk.feature.group" version="5.0.0.201611260302"/>
+<unit id="org.eclipse.gef.graph.sdk.feature.group" version="5.0.0.201611260302"/>
+<unit id="org.eclipse.gef.dot.sdk.feature.group" version="5.0.0.201611260302"/>
+<unit id="org.eclipse.gef.mvc.examples.source.feature.group" version="5.0.0.201611260302"/>
+<unit id="com.google.inject.multibindings" version="3.0.0.v201605172100"/>
+<unit id="org.eclipse.gef.mvc.fx.feature.group" version="5.0.0.201611260302"/>
+<repository location="http://download.eclipse.org/tools/gef/updates/integration"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
