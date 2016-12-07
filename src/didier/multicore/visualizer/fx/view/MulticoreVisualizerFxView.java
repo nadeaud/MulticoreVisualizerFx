@@ -78,7 +78,6 @@ public class MulticoreVisualizerFxView extends ZestFxUiView {
 	}
 	
 	public void resetCanvas (IDMContext[] ctxs) {
-		clearCanvas();
 		fillCanvas(ctxs);
 	}
 	
@@ -92,11 +91,47 @@ public class MulticoreVisualizerFxView extends ZestFxUiView {
 					if(hbox == null || rect == null)
 						continue;
 					
-					rect.setStyle("-fx-fill: #fc8d59;");	
+					rect.setStyle("-fx-fill: rgba(0,128,0,0.5);");	
 					hbox.getChildren().clear();
 				}
 			}
 		}
+	}
+	
+	public class ResizableCircle extends javafx.scene.shape.Circle {
+		
+		public ResizableCircle (double radius) {
+			super(radius);
+		}
+		
+		@Override
+		public double minWidth(double height) {
+	        return 0;
+	    }
+		@Override
+		public double maxWidth(double height) {
+	        return Double.MAX_VALUE;
+	    }
+		@Override
+		public double minHeight(double width) {
+	        return 0;
+	    }
+		@Override
+		public double maxHeight(double width) {
+	        return Double.MAX_VALUE;
+	    }
+		
+		@Override
+		public boolean isResizable() {
+			return true;
+		}
+		
+		
+		@Override
+		public void resize(double width, double height) {
+			setRadius(Math.min(width, height));
+		}
+		
 	}
 	
 	/* Insert waves into the display */
@@ -104,7 +139,11 @@ public class MulticoreVisualizerFxView extends ZestFxUiView {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				if(fGpuModel == null || ctxs == null)
+				if(fGpuModel == null)
+					return;
+				clearCanvas();
+				
+				if(ctxs == null)
 					return;
 				
 				for(IDMContext ctx : ctxs) {
@@ -127,9 +166,10 @@ public class MulticoreVisualizerFxView extends ZestFxUiView {
 					if(hbox == null || rect == null)
 						continue;
 
-					rect.setStyle("-fx-fill: yellow;");	
+					rect.setStyle("-fx-fill: rgba(128,128,0,0.8);");	
 					javafx.scene.shape.Circle circle = new javafx.scene.shape.Circle(3.0);
-					circle.setStyle("-fx-fill: brown;");
+					circle.radiusProperty().bind(rect.heightProperty().divide(2.0).subtract(1.0));
+					circle.setStyle("-fx-fill: rgba(243,243,0,1);");
 					hbox.getChildren().add(circle);
 				}
 			}

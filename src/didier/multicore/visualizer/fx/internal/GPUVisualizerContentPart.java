@@ -84,12 +84,14 @@ public class GPUVisualizerContentPart extends NodePart{
 			return true;
 		}
 		
+		
 		@Override
 		public void resize(double width, double height) {
 			setWidth(width);
 			setHeight(height);
 			
 		}
+		
 	}
 	
 	@Override 
@@ -110,21 +112,12 @@ public class GPUVisualizerContentPart extends NodePart{
 		};
 		
 		m_gridPane = new GridPane();
-		m_gridPane.setStyle("-fx-background-color : #1a9850; -fx-border-color: #1a9850; -fx-border-width: 5;");
+		//m_gridPane.setStyle("-fx-background-color : #1a9850; -fx-border-color: #1a9850; -fx-border-width: 5;");
+		m_gridPane.setStyle("-fx-background-color : rgba(0,64,0,1); -fx-border-color: rgba(0,64,0,1); -fx-border-width: 6;");
 		m_gridPane.setPrefSize(100, 100);
 		m_gridPane.setMouseTransparent(false);
 		m_gridPane.setHgap(6.0);
 		m_gridPane.setVgap(6.0);
-		/*
-		canvas = new AnchorPane();
-		canvas.setStyle("-fx-background-color : lightcyan; -fx-border-color: silver; -fx-border-width: 3;");
-		canvas.setPrefSize(100, 100);
-		canvas.setMouseTransparent(false);
-		
-		m_vbox = new VBox(3.0);
-		m_vbox.setFillWidth(true);
-		*/
-		//m_vbox.maxHeightProperty().bind(canvas.heightProperty().subtract(10));
 		
 		int i=0,j=0;
 		if(m_node != null) {
@@ -141,7 +134,7 @@ public class GPUVisualizerContentPart extends NodePart{
 					}
 					StackPane sPane = new StackPane();
 					Rectangle rect = new ResizableRectangle(50.0,50.0);
-					rect.setStyle("-fx-fill: #91cf60;");
+					rect.setStyle("-fx-fill: rgba(0,128,0,0.8);");
 					rect.setOnMouseClicked(new EventHandler<MouseEvent>() {
 						@Override
 						public void handle(MouseEvent me) {
@@ -154,21 +147,15 @@ public class GPUVisualizerContentPart extends NodePart{
 						}
 					});
 					HBox hbox = new HBox(2);
+					hbox.setFillHeight(true);
+					hbox.setAlignment(Pos.CENTER_LEFT);
 					simd.setHBox(hbox);
 					simd.setRectangle(rect);
 					sPane.getChildren().add(rect);
 					sPane.getChildren().add(hbox);
+					sPane.setAlignment(hbox, Pos.CENTER_LEFT);
 					m_gridPane.add(sPane, j, i);
 					j++;
-					//rect.widthProperty().bind(canvas.widthProperty().subtract(50.0).divide(cu.get_simds().size()));
-					//rect.heightProperty().bind(canvas.heightProperty().
-					//		subtract(10.0).
-					//		divide(element.get_cus().size()*cu.get_simds().size()));
-					//hbox.setHgrow(rect, Priority.ALWAYS);
-					//hbox.getChildren().add(rect);	
-					//hbox.setFillHeight(true);
-					//hbox.prefWidthProperty().bind(m_vbox.widthProperty());
-					//hbox.maxWidthProperty().bind(canvas.widthProperty());
 
 				}
 				j=0;
@@ -178,23 +165,11 @@ public class GPUVisualizerContentPart extends NodePart{
 				double percent = 100.0/(double)element.getComputeUnits().size();
 				rc.setPercentHeight(percent);
 				rc.setFillHeight(true);
-				//rc.setVgrow(Priority.ALWAYS);
 				m_gridPane.getRowConstraints().add(rc);
 				
-				//m_vbox.setVgrow(hbox, Priority.ALWAYS);
-				//m_vbox.getChildren().add(hbox);
 			}
 			
 		}
-		/*
-		m_vbox.setMouseTransparent(false);
-		canvas.setTopAnchor(m_vbox, 5.0);
-		canvas.setBottomAnchor(m_vbox, 5.0);
-
-		canvas.setLeftAnchor(m_vbox, 5.0);
-		canvas.setRightAnchor(m_vbox, 5.0);
-		canvas.getChildren().add(m_vbox);
-		*/
 		group.getChildren().add(m_gridPane);
 		return group;
 	}
